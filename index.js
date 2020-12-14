@@ -18,11 +18,19 @@ bot.on('message', async message => {
   const args = message.content.split(/ +/);
   const command = args.shift().toLowerCase();
   const serverQueue = queue.get(message.guild.id);
-  const voiceChannel = message.member.voice.channel
+  const voiceChannel = message.member.voice.channel;
 
   if (command === '!juke') {
+
+    if (!args[0]) {
+      return message.channel.send(
+        'You gotta link a youtube URL, buddy'
+      );
+    }
+
     const song = await ytdl.getInfo(args[0]);
-    const songTitle = song.videoDetails.title
+    // const song = await ytdl.getInfo(args[0]);
+    // const songTitle = song.videoDetails.title
     // const song = {
     //   title: songInfo.videoDetails.title,
     //   url: songInfo.videoDetails.video_url,
@@ -45,13 +53,13 @@ bot.on('message', async message => {
       try {
         const connection = await voiceChannel.join();
         queueContruct.connection = connection;
-        jukeFunctions.play(message.guild, queueContruct.songs[0], songTitle, queue);
+        jukeFunctions.play(message.guild, queueContruct.songs[0], queue);
       } catch (err) {
         console.log(err);
       }
     } else {
       serverQueue.songs.push(song);
-      return message.channel.send(`**${songTitle}** has been added to the queue (it's currently ${serverQueue.songs.length - 1} in line)`);
+      return message.channel.send(`**${song.videoDetails.title}** has been added to the queue (currently ${serverQueue.songs.length - 1} in line)`);
     }
   }
 
@@ -71,4 +79,11 @@ bot.on('message', async message => {
     jukeFunctions.resume(message, serverQueue)
   }
 
+  if (command === '!jukecommands') {
+    jukeFunctions.commands(message, serverQueue)
+  }
+
+  if (command === '!jukesong') {
+    jukeFunctions.songInfo(serverQueue)
+  }
 });

@@ -1,7 +1,7 @@
 
 const ytdl = require('ytdl-core');
 
-const play = (guild, song, songTitle, queue) => {
+const play = (guild, song, queue) => {
   const serverQueue = queue.get(guild.id);
   if (!song) {
     serverQueue.voiceChannel.leave();
@@ -10,10 +10,9 @@ const play = (guild, song, songTitle, queue) => {
   }
   const dispatcher = serverQueue.connection.play(ytdl.downloadFromInfo(song, { filter: 'audioonly' })).on("finish", () => {
     serverQueue.songs.shift();
-    play(guild, serverQueue.songs[0], songTitle, queue);
+    play(guild, serverQueue.songs[0], queue);
   });
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-  serverQueue.textChannel.send(`**${songTitle}** is now playing`);
 }
 
 const skip = (message, serverQueue) => {
@@ -54,4 +53,14 @@ const resume = (message, serverQueue) => {
   serverQueue.connection.dispatcher.resume();
 }
 
-module.exports = { play, skip, stop, pause, resume }
+const commands = (message, serverQueue) => {
+  return message.channel.send(
+    'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukepause: pause JukeBot \n !jukeresume: resume JukeBot \n !jukesong: displays song info \n JukeBox\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect output for you; others will still hear JukeBot)'  
+  )
+}
+
+const songInfo = (serverQueue) => {
+  return serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`);
+}
+
+module.exports = { play, skip, stop, pause, resume, commands, songInfo }
