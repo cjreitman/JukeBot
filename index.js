@@ -44,8 +44,6 @@ bot.on('message', async message => {
     //   url: songInfo.videoDetails.video_url,
     // };
 
-    console.log(song)
-
    if (!serverQueue) {
       const queueContruct = {
         textChannel: message.channel,

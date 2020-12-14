@@ -1,17 +1,17 @@
 {
-  "name": "discord-bot",
+  "name": "juke-bot",
   "version": "1.0.0",
-  "description": "Discord bot for SitePoint",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Michiel Mulders",
-  "license": "ISC",
+  "author": "",
+  "license": "",
   "dependencies": {
+    "@discordjs/opus": "^0.3.3",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "opusscript": "0.0.7",
-    "ytdl-core": "^4.1.4"
+    "ytdl-core": "^4.1.5"
   }
 }
