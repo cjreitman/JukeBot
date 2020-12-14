@@ -2,6 +2,7 @@ require('dotenv').config();
 const ytdl = require('ytdl-core');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
+const jukeFunctions = require('./jukeFunctions/jukeFunctions');
 
 const TOKEN = process.env.TOKEN;
 
@@ -14,31 +15,14 @@ bot.on('ready', () => {
 const queue = new Map();
 
 bot.on('message', async message => {
-
-  const play = (guild, song) => {
-    const serverQueue = queue.get(guild.id);
-    if (!song) {
-      serverQueue.voiceChannel.leave();
-      queue.delete(guild.id);
-      return;
-    }
-    const dispatcher = serverQueue.connection.play(ytdl.downloadFromInfo(song, { filter: 'audioonly' })).on("finish", () => {
-      serverQueue.songs.shift();
-      play(guild, serverQueue.songs[0]);
-    });
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    serverQueue.textChannel.send(`Start playing: **${song.title}**`);
-  }
-
   const args = message.content.split(/ +/);
   const command = args.shift().toLowerCase();
+  const serverQueue = queue.get(message.guild.id);
+  const voiceChannel = message.member.voice.channel
 
-  if (command === 'play') {
-
-    const serverQueue = queue.get(message.guild.id);
-    const voiceChannel = message.member.voice.channel
-
+  if (command === '!juke') {
     const song = await ytdl.getInfo(args[0]);
+    const songTitle = song.videoDetails.title
     // const song = {
     //   title: songInfo.videoDetails.title,
     //   url: songInfo.videoDetails.video_url,
@@ -61,13 +45,30 @@ bot.on('message', async message => {
       try {
         const connection = await voiceChannel.join();
         queueContruct.connection = connection;
-        play(message.guild, queueContruct.songs[0]);
+        jukeFunctions.play(message.guild, queueContruct.songs[0], songTitle, queue);
       } catch (err) {
         console.log(err);
       }
     } else {
       serverQueue.songs.push(song);
-      return message.channel.send(`${song.title} has been added to the queue!`);
+      return message.channel.send(`**${songTitle}** has been added to the queue (it's currently ${serverQueue.songs.length - 1} in line)`);
     }
   }
+
+  if (command === '!jukeskip') {
+    jukeFunctions.skip(message, serverQueue)
+  }
+
+  if (command === '!jukestop') {
+    jukeFunctions.stop(message, serverQueue)
+  }
+
+  if (command === '!jukepause') {
+    jukeFunctions.pause(message, serverQueue)
+  }
+
+  if (command === '!jukeresume') {
+    jukeFunctions.resume(message, serverQueue)
+  }
+
 });
