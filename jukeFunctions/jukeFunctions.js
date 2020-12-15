@@ -53,9 +53,9 @@ const resume = (message, serverQueue) => {
   serverQueue.connection.dispatcher.resume();
 }
 
-const commands = (message, serverQueue) => {
+const commands = (message) => {
   return message.channel.send(
-    'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukepause: pause JukeBot \n !jukeresume: resume JukeBot \n !jukesong: displays song info \n JukeBox\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect output for you; others will still hear JukeBot)'  
+    'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukepause: pause JukeBot \n !jukeresume: resume JukeBot \n !jukesong: displays song info \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n If you find any errors or something doesn\'t work as expected, let Colin know'  
   )
 }
 

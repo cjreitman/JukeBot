@@ -1,7 +1,13 @@
 require('dotenv').config();
+const request = require(`request`);
 const ytdl = require('ytdl-core');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
+const validator = require('validator');
+const fs = require('fs');
+const ffmpeg = require('fluent-ffmpeg');
+const YoutubeMp3Downloader = require("youtube-mp3-downloader");
+
 const jukeFunctions = require('./jukeFunctions/jukeFunctions');
 
 const TOKEN = process.env.TOKEN;
@@ -20,23 +26,28 @@ bot.on('message', async message => {
   const serverQueue = queue.get(message.guild.id);
   const voiceChannel = message.member.voice.channel;
 
-  if (command === '!juke') {
+  if (!args[0] && command === '!juke') {
+    return jukeFunctions.commands(message)
+  }
 
-    if (!args[0]) {
+  if (command === '!juke' && args[0]) {
+
+    if (!validator.isURL(args[0])) {
       return message.channel.send(
-        'You gotta link a youtube URL, buddy'
+        'It doesn\'t look like that\'s a valid URL.  You suck at copying URLs'
       );
     }
 
-    const song = await ytdl.getInfo(args[0]);
-    // const song = await ytdl.getInfo(args[0]);
-    // const songTitle = song.videoDetails.title
-    // const song = {
-    //   title: songInfo.videoDetails.title,
-    //   url: songInfo.videoDetails.video_url,
-    // };
+    let song;
+    try {
+      song = await ytdl.getInfo(args[0]);
+     } catch (e) {
+      return message.channel.send(
+        `I tried to grab the audio, but I got an error back: ${e}`
+      );
+     }
 
-   if (!serverQueue) {
+    if (!serverQueue) {
       const queueContruct = {
         textChannel: message.channel,
         voiceChannel: voiceChannel,
@@ -55,7 +66,9 @@ bot.on('message', async message => {
         queueContruct.connection = connection;
         jukeFunctions.play(message.guild, queueContruct.songs[0], queue);
       } catch (err) {
-        console.log(err);
+        return message.channel.send(
+          'JukeBot out'
+        );
       }
     } else {
       serverQueue.songs.push(song);
@@ -63,27 +76,89 @@ bot.on('message', async message => {
     }
   }
 
+  if (!serverQueue && !args[0]) {
+    return message.channel.send(
+      `No songs are playing.  How am I supposed to ${command} nothing`
+    );
+  }
+
   if (command === '!jukeskip') {
-    jukeFunctions.skip(message, serverQueue)
+    try {
+      return jukeFunctions.skip(message, serverQueue)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   if (command === '!jukestop') {
-    jukeFunctions.stop(message, serverQueue)
+    try {
+      return jukeFunctions.stop(message, serverQueue)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   if (command === '!jukepause') {
-    jukeFunctions.pause(message, serverQueue)
+    try {
+      return jukeFunctions.pause(message, serverQueue)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   if (command === '!jukeresume') {
-    jukeFunctions.resume(message, serverQueue)
-  }
-
-  if (command === '!jukecommands') {
-    jukeFunctions.commands(message, serverQueue)
+    try {
+      return jukeFunctions.resume(message, serverQueue)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   if (command === '!jukesong') {
-    jukeFunctions.songInfo(serverQueue)
+    try {
+      return jukeFunctions.songInfo(serverQueue)
+    } catch (err) {
+      console.log(err)
+    }
   }
+
+  if (command === '!jukequeue') {
+    try {
+      return jukeFunctions.queue(serverQueue)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // if (command === '!jukesave') {
+  //   try {
+  //     if (serverQueue) {
+        // const mp3 = './audio.mp3'
+        // const proc = new ffmpeg(dl);
+        // proc.setFfmpegPath('/usr/local/bin/ffmpeg');
+        // return ytdl.downloadFromInfo(serverQueue.songs[0], { format: 'mp3', filter: 'audioonly' })
+        // const download = (url) => {
+        //   // return request.get(url).pipe(fs.createWriteStream('meme.png'));
+        //   return ytdl(url, {filter: 'audioonly', format: 'mp3'}).pipe(fs.createWriteStream('audio.mp3')).on('end', () => {
+        //     message.sendFile('./audio.mp3');
+        // });
+        // }
+
+        // download(serverQueue.songs[0].videoDetails.video_url);
+
+        // return ytdl.downloadFromInfo(serverQueue.songs[0], { filter: 'audioonly' }).pipe(fs.createWriteStream('song.mp3'));
+        // const mp3 = ytdl(dl, {format: 'mp3'})
+        // window.open(mp3, '_blank');
+        // const YD = new YoutubeMp3Downloader({
+        //   "ffmpegPath": '/usr/local/bin/ffmpeg',   // FFmpeg binary location  // Output file location (default: the home directory)
+        //   "youtubeVideoQuality": "highestaudio",  // Desired video quality (default: highestaudio)
+        //   "queueParallelism": 2,                  // Download parallelism (default: 1)
+        //   "progressTimeout": 2000,                // Interval in ms for the progress reports (default: 1000)                  // Enable download from WebM sources (default: false)
+        // });
+        // YD.download(serverQueue.songs[0].videoDetails.videoId, serverQueue.songs[0].videoDetails.videoId + '.mp3');
+      // }
+    // } catch (err) {
+    //   console.log(err)
+    // }
+  // }
 });
