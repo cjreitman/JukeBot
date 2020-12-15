@@ -24,7 +24,10 @@ bot.on('message', async message => {
   const args = message.content.split(/ +/);
   const command = args.shift().toLowerCase();
   const serverQueue = queue.get(message.guild.id);
-  const voiceChannel = message.member.voice.channel;
+  let voiceChannel;
+  if (message.member) {
+    voiceChannel = message.member.voice.channel;
+  }
 
   if (!args[0] && command === '!juke') {
     return jukeFunctions.commands(message)
