@@ -23,130 +23,137 @@ const queue = new Map();
 bot.on('message', async message => {
   const args = message.content.split(/ +/);
   const command = args.shift().toLowerCase();
-  const serverQueue = queue.get(message.guild.id);
-  let voiceChannel;
-  if (message.member) {
-    voiceChannel = message.member.voice.channel;
-  }
 
-  if (command === '!jukezack') {
-    return message.channel.send(`Get juked, Zack.  Colin is the master`);
-  }
+  const isJuke = command.substring(0, 5)
 
-  if (command === '!jukecolin') {
-    return message.channel.send(`Colin is a jukebaby fuckboi lol`);
-  }
-
-  if (command === '!jukeshawn') {
-    return message.channel.send(`**-FART SOUND-**`);
-  }
-
-  if (command === '!jukenick') {
-    return message.channel.send(`#CelebratedPooper`);
-  }
-
-  if (!args[0] && command === '!juke') {
-    return jukeFunctions.commands(message)
-  }
-
-  if (command === '!juke' && args[0]) {
-
-    if (!validator.isURL(args[0])) {
-      return message.channel.send(
-        'It doesn\'t look like that\'s a valid URL.  You suck at copying URLs'
-      );
+  if (isJuke === '!juke') {
+    const serverQueue = queue.get(message.guild.id);
+    let voiceChannel;
+    if (message.member) {
+      voiceChannel = message.member.voice.channel;
     }
-
-    let song;
-    try {
-      song = await ytdl.getInfo(args[0]);
-     } catch (e) {
-      return message.channel.send(
-        `I tried to grab the audio, but I got an error back: ${e}`
-      );
-     }
-
-    if (!serverQueue) {
-      const queueContruct = {
-        textChannel: message.channel,
-        voiceChannel: voiceChannel,
-        connection: null,
-        songs: [],
-        volume: 5,
-        playing: true
-      };
-
-      queue.set(message.guild.id, queueContruct);
-
-      queueContruct.songs.push(song);
-
-      try {
-        const connection = await voiceChannel.join();
-        queueContruct.connection = connection;
-        jukeFunctions.play(message.guild, queueContruct.songs[0], queue);
-      } catch (err) {
+  
+    if (command === '!jukezack') {
+      return message.channel.send(`Get juked, Zack.  Colin is the master`);
+    }
+  
+    if (command === '!jukecolin') {
+      return message.channel.send(`Colin is a jukebaby fuckboi lol`);
+    }
+  
+    if (command === '!jukeshawn') {
+      return message.channel.send(`**-FART SOUND-**`);
+    }
+  
+    if (command === '!jukenick') {
+      return message.channel.send(`#CelebratedPooper`);
+    }
+  
+    if (!args[0] && command === '!juke') {
+      return jukeFunctions.commands(message)
+    }
+  
+    if (command === '!juke' && args[0]) {
+  
+      if (!validator.isURL(args[0])) {
         return message.channel.send(
-          'Hold your horses, partner.  Gimme a sec to boot up'
+          'It doesn\'t look like that\'s a valid URL.  You suck at copying URLs'
         );
       }
-    } else {
-      serverQueue.songs.push(song);
-      return message.channel.send(`**${song.videoDetails.title}** has been added to the queue (currently ${serverQueue.songs.length - 1} in line)`);
+  
+      let song;
+      try {
+        song = await ytdl.getInfo(args[0]);
+       } catch (e) {
+        return message.channel.send(
+          `I tried to grab the audio, but I got an error back: ${e}`
+        );
+       }
+  
+      if (!serverQueue) {
+        const queueContruct = {
+          textChannel: message.channel,
+          voiceChannel: voiceChannel,
+          connection: null,
+          songs: [],
+          volume: 5,
+          playing: true
+        };
+  
+        queue.set(message.guild.id, queueContruct);
+  
+        queueContruct.songs.push(song);
+  
+        try {
+          const connection = await voiceChannel.join();
+          queueContruct.connection = connection;
+          jukeFunctions.play(message.guild, queueContruct.songs[0], queue);
+        } catch (err) {
+          return message.channel.send(
+            'Hold your horses, partner.  Gimme a sec to boot up'
+          );
+        }
+      } else {
+        serverQueue.songs.push(song);
+        return message.channel.send(`**${song.videoDetails.title}** has been added to the queue (currently ${serverQueue.songs.length - 1} in line)`);
+      }
     }
-  }
+  
+    if (!serverQueue && !args[0]) {
+      return message.channel.send(
+        `I can't ${command} right now.  If it's a song-specific command, make sure a song is playing.`
+      );
+    }
 
-  if (!serverQueue && !args[0]) {
-    return message.channel.send(
-      `I can't ${command} right now.  Try playing a song first, or consider giving up lol`
-    );
-  }
-
-  if (serverQueue) {
-    if (command === '!jukeskip') {
-      try {
-        return jukeFunctions.skip(message, serverQueue)
-      } catch (err) {
-        console.log(err)
-      }
-    }
+    console.log(command)
   
-    if (command === '!jukestop') {
-      try {
-        return jukeFunctions.stop(message, serverQueue)
-      } catch (err) {
-        console.log(err)
+    if (serverQueue) {
+      if (command === '!jukeskip') {
+        try {
+          return jukeFunctions.skip(message, serverQueue)
+        } catch (err) {
+          console.log(err)
+        }
       }
-    }
-  
-    if (command === '!jukepause') {
-      try {
-        return jukeFunctions.pause(message, serverQueue)
-      } catch (err) {
-        console.log(err)
+    
+      if (command === '!jukestop') {
+        try {
+          return jukeFunctions.stop(message, serverQueue)
+        } catch (err) {
+          console.log(err)
+        }
       }
-    }
-  
-    if (command === '!jukeresume') {
-      try {
-        return jukeFunctions.resume(message, serverQueue)
-      } catch (err) {
-        console.log(err)
+    
+      if (command === '!jukepause') {
+        try {
+          return jukeFunctions.pause(message, serverQueue)
+        } catch (err) {
+          console.log(err)
+        }
       }
-    }
-  
-    if (command === '!jukesong') {
-      try {
-        return jukeFunctions.songInfo(serverQueue)
-      } catch (err) {
-        console.log(err)
+    
+      if (command === '!jukeresume') {
+        try {
+          return jukeFunctions.resume(message, serverQueue)
+        } catch (err) {
+          console.log(err)
+        }
       }
-    }
-  
-    if (command === '!jukequeue') {
-      try {
-        return jukeFunctions.queue(serverQueue, message)
-      } catch (err) {
-        console.log(err)
+    
+      if (command === '!jukesong') {
+        try {
+          return jukeFunctions.songInfo(serverQueue)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    
+      if (command === '!jukequeue') {
+        try {
+          return jukeFunctions.queue(serverQueue, message)
+        } catch (err) {
+          console.log(err)
+        }
       }
     }
   }
