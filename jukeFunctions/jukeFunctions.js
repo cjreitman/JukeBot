@@ -11,6 +11,7 @@ const play = (guild, song, queue) => {
     queue.delete(guild.id);
     return;
   }
+  console.log('here')
   const dispatcher = serverQueue.connection.play(ytdl.downloadFromInfo(song, { filter: 'audioonly' })).on("finish", () => {
     serverQueue.songs.shift();
     play(guild, serverQueue.songs[0], queue);
