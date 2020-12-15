@@ -15,7 +15,7 @@ const play = (guild, song, queue) => {
     serverQueue.songs.shift();
     play(guild, serverQueue.songs[0], queue);
   });
-  dispatcher.setVolume(2);
+  dispatcher.setVolume(1);
   serverQueue.textChannel.send(
     `Now playing **${serverQueue.songs[0].videoDetails.title}**`
   );

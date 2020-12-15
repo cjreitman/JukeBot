@@ -29,8 +29,22 @@ bot.on('message', async message => {
     voiceChannel = message.member.voice.channel;
   }
 
-  if (command === 'jukezack') {
+  console.log(message);
+
+  if (command === '!jukezack') {
     return message.channel.send(`Get juked, Zack.  Colin is the master`);
+  }
+
+  if (command === '!jukecolin') {
+    return message.channel.send(`Colin is a jukebaby fuckboi lol`);
+  }
+
+  if (command === '!jukeshawn') {
+    return message.channel.send(`**-FART SOUND-**`);
+  }
+
+  if (command === '!jukenick') {
+    return message.channel.send(`#CelebratedPooper`);
   }
 
   if (!args[0] && command === '!juke') {
@@ -85,7 +99,7 @@ bot.on('message', async message => {
 
   if (!serverQueue && !args[0]) {
     return message.channel.send(
-      `No songs are playing.  How am I supposed to ${command} nothing`
+      `I can't ${command} right now.  Try playing a song first, or consider giving up lol`
     );
   }
 
