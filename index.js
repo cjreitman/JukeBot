@@ -82,51 +82,53 @@ bot.on('message', async message => {
     );
   }
 
-  if (command === '!jukeskip') {
-    try {
-      return jukeFunctions.skip(message, serverQueue)
-    } catch (err) {
-      console.log(err)
+  if (serverQueue) {
+    if (command === '!jukeskip') {
+      try {
+        return jukeFunctions.skip(message, serverQueue)
+      } catch (err) {
+        console.log(err)
+      }
     }
-  }
-
-  if (command === '!jukestop') {
-    try {
-      return jukeFunctions.stop(message, serverQueue)
-    } catch (err) {
-      console.log(err)
+  
+    if (command === '!jukestop') {
+      try {
+        return jukeFunctions.stop(message, serverQueue)
+      } catch (err) {
+        console.log(err)
+      }
     }
-  }
-
-  if (command === '!jukepause') {
-    try {
-      return jukeFunctions.pause(message, serverQueue)
-    } catch (err) {
-      console.log(err)
+  
+    if (command === '!jukepause') {
+      try {
+        return jukeFunctions.pause(message, serverQueue)
+      } catch (err) {
+        console.log(err)
+      }
     }
-  }
-
-  if (command === '!jukeresume') {
-    try {
-      return jukeFunctions.resume(message, serverQueue)
-    } catch (err) {
-      console.log(err)
+  
+    if (command === '!jukeresume') {
+      try {
+        return jukeFunctions.resume(message, serverQueue)
+      } catch (err) {
+        console.log(err)
+      }
     }
-  }
-
-  if (command === '!jukesong') {
-    try {
-      return jukeFunctions.songInfo(serverQueue)
-    } catch (err) {
-      console.log(err)
+  
+    if (command === '!jukesong') {
+      try {
+        return jukeFunctions.songInfo(serverQueue)
+      } catch (err) {
+        console.log(err)
+      }
     }
-  }
-
-  if (command === '!jukequeue') {
-    try {
-      return jukeFunctions.queue(serverQueue)
-    } catch (err) {
-      console.log(err)
+  
+    if (command === '!jukequeue') {
+      try {
+        return jukeFunctions.queue(serverQueue)
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 

@@ -4,6 +4,9 @@ const ytdl = require('ytdl-core');
 const play = (guild, song, queue) => {
   const serverQueue = queue.get(guild.id);
   if (!song) {
+    serverQueue.textChannel.send(
+      'JukeBot out'
+    );
     serverQueue.voiceChannel.leave();
     queue.delete(guild.id);
     return;
@@ -63,4 +66,10 @@ const songInfo = (serverQueue) => {
   return serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`);
 }
 
-module.exports = { play, skip, stop, pause, resume, commands, songInfo }
+const queue = (message, serverQueue) => {
+  return message.channel.send(
+    'I don\'t have that functionality yet'
+  );
+}
+
+module.exports = { play, skip, stop, pause, resume, commands, songInfo, queue }
