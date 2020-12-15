@@ -29,6 +29,10 @@ bot.on('message', async message => {
     voiceChannel = message.member.voice.channel;
   }
 
+  if (command === 'jukezack') {
+    return message.channel.send(`Get juked, Zack.  Colin is the master`);
+  }
+
   if (!args[0] && command === '!juke') {
     return jukeFunctions.commands(message)
   }
