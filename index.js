@@ -67,7 +67,7 @@ bot.on('message', async message => {
         jukeFunctions.play(message.guild, queueContruct.songs[0], queue);
       } catch (err) {
         return message.channel.send(
-          'JukeBot out'
+          'Hold your horses, partner.  Gimme a sec to boot up'
         );
       }
     } else {
@@ -125,7 +125,7 @@ bot.on('message', async message => {
   
     if (command === '!jukequeue') {
       try {
-        return jukeFunctions.queue(serverQueue)
+        return jukeFunctions.queue(serverQueue, message)
       } catch (err) {
         console.log(err)
       }

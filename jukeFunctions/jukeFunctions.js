@@ -16,6 +16,9 @@ const play = (guild, song, queue) => {
     play(guild, serverQueue.songs[0], queue);
   });
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+  serverQueue.textChannel.send(
+    `Now playing **${serverQueue.songs[0].videoDetails.title}**`
+  );
 }
 
 const skip = (message, serverQueue) => {
@@ -66,9 +69,13 @@ const songInfo = (serverQueue) => {
   return serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`);
 }
 
-const queue = (message, serverQueue) => {
+const queue = (serverQueue, message) => {
+  const songTitleArray = serverQueue.songs.map((song, idx) => `${idx + 1}.` + ' ' + song.videoDetails.title);
+  const firstSong = songTitleArray.shift();
+  const firstSongM = firstSong + ' (currently playing)';
+  songTitleArray.unshift(firstSongM)
   return message.channel.send(
-    'I don\'t have that functionality yet'
+    songTitleArray
   );
 }
 
