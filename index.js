@@ -32,6 +32,10 @@ bot.on('message', async message => {
     if (message.member) {
       voiceChannel = message.member.voice.channel;
     }
+
+    if (command === '!jukecommands') {
+      return jukeFunctions.commands(message)
+    }
   
     if (command === '!jukezack') {
       return message.channel.send(`Get juked, Zack.  Colin is the master`);
@@ -54,7 +58,6 @@ bot.on('message', async message => {
     }
   
     if (command === '!juke' && args[0]) {
-  
       if (!validator.isURL(args[0])) {
         return message.channel.send(
           'It doesn\'t look like that\'s a valid URL.  You suck at copying URLs'
@@ -104,56 +107,34 @@ bot.on('message', async message => {
         `I can't ${command} right now.  If it's a song-specific command, make sure a song is playing.`
       );
     }
-
-    console.log(command)
   
     if (serverQueue) {
-      if (command === '!jukeskip') {
-        try {
+      try {
+        if (command === '!jukeskip') {
           return jukeFunctions.skip(message, serverQueue)
-        } catch (err) {
-          console.log(err)
         }
-      }
-    
-      if (command === '!jukestop') {
-        try {
+      
+        if (command === '!jukestop') {
           return jukeFunctions.stop(message, serverQueue)
-        } catch (err) {
-          console.log(err)
         }
-      }
-    
-      if (command === '!jukepause') {
-        try {
+      
+        if (command === '!jukepause') {
           return jukeFunctions.pause(message, serverQueue)
-        } catch (err) {
-          console.log(err)
         }
-      }
-    
-      if (command === '!jukeresume') {
-        try {
+      
+        if (command === '!jukeresume') {
           return jukeFunctions.resume(message, serverQueue)
-        } catch (err) {
-          console.log(err)
         }
-      }
-    
-      if (command === '!jukesong') {
-        try {
+      
+        if (command === '!jukesong') {
           return jukeFunctions.songInfo(serverQueue)
-        } catch (err) {
-          console.log(err)
         }
-      }
-    
-      if (command === '!jukequeue') {
-        try {
+      
+        if (command === '!jukequeue') {
           return jukeFunctions.queue(serverQueue, message)
-        } catch (err) {
-          console.log(err)
         }
+      } catch (e) {
+        console.log(e)
       }
     }
   }
