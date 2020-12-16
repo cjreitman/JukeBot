@@ -18,5 +18,10 @@
     "validator": "^13.5.2",
     "youtube-mp3-downloader": "^0.7.6",
     "ytdl-core": "^4.1.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.15.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
   }
 }
