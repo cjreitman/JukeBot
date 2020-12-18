@@ -33,6 +33,10 @@ bot.on('message', async message => {
       voiceChannel = message.member.voice.channel;
     }
 
+    if (!voiceChannel) {
+      return message.channel.send(`You gotta be in a voice channel.  Otherwise the bot breaks lol`);
+    }
+
     if (command === '!jukecommands') {
       try {
         jukeFunctions.commands(message)
