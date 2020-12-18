@@ -94,7 +94,7 @@ bot.on('message', async message => {
             jukeFunctions.play(message.guild, queueContruct.songs[0], queue);
           } catch (err) {
             return message.channel.send(
-              'Hold your horses, partner.  Gimme a sec to boot up'
+              'Yeah, something broke.  I dunno.  Ask Colin to restart me if it keeps happening'
             );
           }
         } else {
@@ -103,7 +103,7 @@ bot.on('message', async message => {
         }
       }
     } else if (!args[0]) {
-      if (serverQueue) {
+      if (serverQueue && serverQueue.connection) {
         if (command === '!jukeskip') {
           try {
             return jukeFunctions.skip(message, serverQueue)
