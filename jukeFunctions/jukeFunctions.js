@@ -10,13 +10,13 @@ const play = (guild, song, queue) => {
     queue.delete(guild.id);
     return;
   }
-  const dispatcher = serverQueue.connection.play(ytdl.downloadFromInfo(song, { filter: 'audioonly' })).on('finish', () => {
+  const dispatcher = serverQueue.connection.play(ytdl.downloadFromInfo(song.songInfo, { filter: 'audioonly', begin: song.timeStamp })).on('finish', () => {
     serverQueue.songs.shift();
     play(guild, serverQueue.songs[0], queue);
   });
   dispatcher.setVolume(1);
   serverQueue.textChannel.send(
-    `Now playing **${serverQueue.songs[0].videoDetails.title}**`,
+    `Now playing **${serverQueue.songs[0].songInfo.videoDetails.title}**`,
   );
 };
 

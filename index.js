@@ -73,10 +73,10 @@ bot.on('message', async (message) => {
         } else {
           youtubeUrl = args[0];
         }
-        let song;
+        const song = {};
         try {
           if (typeof youtubeUrl === 'string') {
-            song = await ytdl.getInfo(youtubeUrl);
+            song.songInfo = await ytdl.getInfo(youtubeUrl);
           } else {
             let finalUrl;
             for (let i = 0; i < youtubeUrl.all.length; i += 1) {
@@ -85,12 +85,21 @@ bot.on('message', async (message) => {
                 break;
               }
             }
-            song = await ytdl.getInfo(finalUrl.url);
+            song.songInfo = await ytdl.getInfo(finalUrl.url);
           }
         } catch (e) {
           return message.channel.send(
             `I tried to grab the audio, but I got an error back: ${e}`,
           );
+        }
+
+        const timeStampSplit = args[0].split('t=');
+        const timeStamp = timeStampSplit[1];
+
+        if (timeStamp) {
+          song.timeStamp = `${timeStamp}s`;
+        } else {
+          song.timeStamp = '0';
         }
 
         if (!serverQueue) {
