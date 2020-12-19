@@ -78,7 +78,14 @@ bot.on('message', async (message) => {
           if (typeof youtubeUrl === 'string') {
             song = await ytdl.getInfo(youtubeUrl);
           } else {
-            song = await ytdl.getInfo(youtubeUrl.all[0].url);
+            let finalUrl;
+            for (let i = 0; i < youtubeUrl.all.length; i += 1) {
+              if (youtubeUrl.all[i].type === 'video') {
+                finalUrl = youtubeUrl.all[i];
+                break;
+              }
+            }
+            song = await ytdl.getInfo(finalUrl.url);
           }
         } catch (e) {
           return message.channel.send(
