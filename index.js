@@ -127,7 +127,7 @@ bot.on('message', async (message) => {
           }
         } else {
           serverQueue.songs.push(song);
-          return message.channel.send(`**${song.videoDetails.title}** has been added to the queue (currently ${serverQueue.songs.length - 1} in line)`);
+          return message.channel.send(`**${song.songInfo.videoDetails.title}** has been added to the queue (currently ${serverQueue.songs.length - 1} in line)`);
         }
       }
     } else if (!args[0]) {
