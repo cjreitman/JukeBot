@@ -32,8 +32,13 @@ bot.on('message', async (message) => {
   if (isJuke === '!juke') {
     const serverQueue = queue.get(message.guild.id);
     let voiceChannel;
-    if (message.member) {
+    if (message.member.voice.channel) {
       voiceChannel = message.member.voice.channel;
+    } else {
+      const defaultChannel = message.guild.channels.cache.find((channel) => channel.name === 'Club Penguin' || channel.name === 'Dr. Juice and The Butts');
+      if (defaultChannel) {
+        voiceChannel = defaultChannel;
+      }
     }
 
     if (!voiceChannel) {
