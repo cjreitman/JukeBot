@@ -24,18 +24,13 @@ bot.on('message', async (message) => {
 
   const isJuke = command.substring(0, 5);
 
-  if (command === '!jukeshare') {
-    console.log(message);
-    return console.log('!juke sharing');
-  }
-
   if (isJuke === '!juke') {
     const serverQueue = queue.get(message.guild.id);
     let voiceChannel;
     if (message.member.voice.channel) {
       voiceChannel = message.member.voice.channel;
     } else {
-      const defaultChannel = message.guild.channels.cache.find((channel) => channel.name === 'Club Penguin' || channel.name === 'Dr. Juice and The Butts');
+      const defaultChannel = message.guild.channels.cache.find((channel) => channel.name === 'Club Penguin' || channel.name === 'Phantasy Star Online' || channel.name === 'Monstrotown');
       if (defaultChannel) {
         voiceChannel = defaultChannel;
       }

@@ -21,12 +21,19 @@ const play = (guild, song, queue) => {
 };
 
 const skip = (message, serverQueue) => {
+  console.log(serverQueue.connection.dispatcher.paused);
   if (!message.member.voice.channel) {
     return message.channel.send(
       'You gotta be in a voice channel to skip the song, dude',
     );
   }
-  serverQueue.connection.dispatcher.end();
+  if (!serverQueue.connection.dispatcher.paused) {
+    serverQueue.connection.dispatcher.end();
+  } else {
+    return message.channel.send(
+      'We can\'t skip a song while the bot\'s paused or the bot breaks :(',
+    );
+  }
 };
 
 const stop = (message, serverQueue) => {
@@ -64,7 +71,7 @@ const commands = (message) => message.channel.send(
 const songInfo = (serverQueue) => serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`);
 
 const queue = (serverQueue, message) => {
-  const songTitleArray = serverQueue.songs.map((song, idx) => `${`${idx + 1}.` + ' '}${song.videoDetails.title}`);
+  const songTitleArray = serverQueue.songs.map((song, idx) => `${`${idx + 1}.` + ' '}${song.songInfo.videoDetails.title}`);
   const firstSong = songTitleArray.shift();
   const firstSongM = `${firstSong} (currently playing)`;
   songTitleArray.unshift(firstSongM);
