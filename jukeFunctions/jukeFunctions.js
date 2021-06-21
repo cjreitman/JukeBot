@@ -21,7 +21,6 @@ const play = (guild, song, queue) => {
 };
 
 const skip = (message, serverQueue) => {
-  console.log(serverQueue.connection.dispatcher.paused);
   if (!message.member.voice.channel) {
     return message.channel.send(
       'You gotta be in a voice channel to skip the song, dude',
@@ -49,7 +48,7 @@ const stop = (message, serverQueue) => {
 const pause = (message, serverQueue) => {
   if (!message.member.voice.channel) {
     return message.channel.send(
-      'You gotta be in a voice channel to skip the song, pal',
+      'You gotta be in a voice channel to pause the song, pal',
     );
   }
   serverQueue.connection.dispatcher.pause();
@@ -58,7 +57,7 @@ const pause = (message, serverQueue) => {
 const resume = (message, serverQueue) => {
   if (!message.member.voice.channel) {
     return message.channel.send(
-      'You gotta be in a voice channel to skip the song, fella',
+      'You gotta be in a voice channel to resume the song, fella',
     );
   }
   serverQueue.connection.dispatcher.resume();
