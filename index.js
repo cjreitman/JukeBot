@@ -158,17 +158,9 @@ if (cluster.isWorker) {
             }
           }
 
-          if (command === '!jukepause') {
+          if (command === '!jukereset') {
             try {
-              return jukeFunctions.pause(message, serverQueue);
-            } catch (err) {
-              console.log(err);
-            }
-          }
-
-          if (command === '!jukeresume') {
-            try {
-              return jukeFunctions.resume(message, serverQueue);
+              return jukeFunctions.reset(message, serverQueue);
             } catch (err) {
               console.log(err);
             }
@@ -190,8 +182,7 @@ if (cluster.isWorker) {
             }
           }
         } else if (!serverQueue) {
-          console.log(command);
-          if (command !== '!jukecommands') {
+          if (command !== '!jukecommands' && command !== '!jukereset') {
             return message.channel.send(
               `I can't ${command} right now.  If it's a song-specific command, make sure a song is playing.`,
             );

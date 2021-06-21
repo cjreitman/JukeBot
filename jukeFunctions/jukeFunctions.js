@@ -45,26 +45,16 @@ const stop = (message, serverQueue) => {
   serverQueue.connection.dispatcher.end();
 };
 
-const pause = (message, serverQueue) => {
-  if (!message.member.voice.channel) {
-    return message.channel.send(
-      'You gotta be in a voice channel to pause the song, pal',
-    );
-  }
-  serverQueue.connection.dispatcher.pause();
-};
-
-const resume = (message, serverQueue) => {
-  if (!message.member.voice.channel) {
-    return message.channel.send(
-      'You gotta be in a voice channel to resume the song, fella',
-    );
-  }
-  serverQueue.connection.dispatcher.resume();
+const reset = (message, serverQueue) => {
+  serverQueue.songs = [];
+  serverQueue.connection.dispatcher.end();
+  return message.channel.send(
+    'Resetting the bot..',
+  );
 };
 
 const commands = (message) => message.channel.send(
-  'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukepause: pause JukeBot \n !jukeresume: resume JukeBot \n !jukesong: displays song info \n !jukequeue: displays the list of queued songs \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n If you find any errors or something doesn\'t work as expected, let Colin know',
+  'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukesong: displays song info \n !jukequeue: displays the list of queued songs \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n If you find any errors or something doesn\'t work as expected, let Colin know \n Otherwise, use !jukereset to reset the bot',
 );
 
 const songInfo = (serverQueue) => serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`);
@@ -80,5 +70,5 @@ const queue = (serverQueue, message) => {
 };
 
 module.exports = {
-  play, skip, stop, pause, resume, commands, songInfo, queue,
+  play, skip, stop, commands, songInfo, queue, reset,
 };
