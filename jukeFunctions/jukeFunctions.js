@@ -3,14 +3,13 @@ const ytdl = require('ytdl-core');
 const play = (guild, song, queue) => {
   const serverQueue = queue.get(guild.id);
   if (!song) {
-    serverQueue.textChannel.send(
-      'JukeBot out',
-    );
     serverQueue.voiceChannel.leave();
     queue.delete(guild.id);
     return;
   }
-  const dispatcher = serverQueue.connection.play(ytdl.downloadFromInfo(song.songInfo, { filter: 'audioonly', begin: song.timeStamp })).on('finish', () => {
+  const dispatcher = serverQueue.connection.play(ytdl.downloadFromInfo(
+    song.songInfo, { filter: 'audioonly', begin: song.timeStamp },
+  )).on('finish', () => {
     serverQueue.songs.shift();
     play(guild, serverQueue.songs[0], queue);
   });
@@ -33,6 +32,9 @@ const skip = (message, serverQueue) => {
       'We can\'t skip a song while the bot\'s paused or the bot breaks :(',
     );
   }
+  message.channel.send(
+    'Skipping to next song..',
+  );
 };
 
 const stop = (message, serverQueue) => {
@@ -41,23 +43,25 @@ const stop = (message, serverQueue) => {
       'You gotta be in a voice channel to stop the song, bro',
     );
   }
+  message.channel.send(
+    'Stopping the bot..',
+  );
   serverQueue.songs = [];
   serverQueue.connection.dispatcher.end();
 };
 
-const reset = (message, serverQueue) => {
-  serverQueue.songs = [];
-  serverQueue.connection.dispatcher.end();
-  return message.channel.send(
-    'Resetting the bot..',
-  );
+const crash = (message, serverQueue) => {
+  const null2 = null;
+  null2.start();
 };
 
 const commands = (message) => message.channel.send(
-  'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukesong: displays song info \n !jukequeue: displays the list of queued songs \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n If you find any errors or something doesn\'t work as expected, let Colin know \n Otherwise, use !jukereset to reset the bot',
+  'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukesong: displays song info \n !jukequeue: displays the list of queued songs \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n If you find any errors or something doesn\'t work as expected, let Colin know',
 );
 
-const songInfo = (serverQueue) => serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`);
+const songInfo = (serverQueue) => serverQueue.textChannel.send(
+  `**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`,
+);
 
 const queue = (serverQueue, message) => {
   const songTitleArray = serverQueue.songs.map((song, idx) => `${`${idx + 1}.` + ' '}${song.songInfo.videoDetails.title}`);
@@ -70,5 +74,5 @@ const queue = (serverQueue, message) => {
 };
 
 module.exports = {
-  play, skip, stop, commands, songInfo, queue, reset,
+  play, skip, stop, commands, songInfo, queue, crash,
 };
