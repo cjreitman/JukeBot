@@ -24,20 +24,13 @@ bot.on('message', async (message) => {
 
   const isJuke = command.substring(0, 5);
 
-  if (command === '!jukecrash') {
-    const null2 = null;
-    null2.start();
-  }
-
   if (isJuke === '!juke') {
     const serverQueue = queue.get(message.guild.id);
     let voiceChannel;
     if (message.member.voice.channel) {
       voiceChannel = message.member.voice.channel;
     } else {
-      const defaultChannel = message.guild.channels.cache.find(
-        (channel) => channel.name === 'Club Penguin' || channel.name === 'Phantasy Star Online' || channel.name === 'Monstrotown',
-      );
+      const defaultChannel = message.guild.channels.cache.find((channel) => channel.name === 'Club Penguin' || channel.name === 'Phantasy Star Online' || channel.name === 'Monstrotown');
       if (defaultChannel) {
         voiceChannel = defaultChannel;
       }
@@ -46,6 +39,7 @@ bot.on('message', async (message) => {
     if (!voiceChannel) {
       return message.channel.send('You gotta be in a voice channel.  Otherwise the bot breaks lol');
     }
+
     if (command === '!jukecommands') {
       try {
         jukeFunctions.commands(message);
@@ -66,19 +60,23 @@ bot.on('message', async (message) => {
       return message.channel.send('**-FART SOUND-**');
     }
 
+    if (command === '!jukenick') {
+      return message.channel.send('#CelebratedPooper');
+    }
+
     if (args[0]) {
       if (command === '!juke') {
         let youtubeUrl;
         if (!validator.isURL(args[0])) {
           const searchString = args.join(' ');
           youtubeUrl = await search(searchString);
+          console.log(youtubeUrl)
         } else {
           youtubeUrl = args[0];
         }
         const song = {};
         try {
           if (typeof youtubeUrl === 'string') {
-            console.log(youtubeUrl);
             song.songInfo = await ytdl.getInfo(youtubeUrl);
           } else {
             let finalUrl;
@@ -88,12 +86,11 @@ bot.on('message', async (message) => {
                 break;
               }
             }
-            console.log(finalUrl.url);
             song.songInfo = await ytdl.getInfo(finalUrl.url);
           }
         } catch (e) {
           return message.channel.send(
-            `I tried to grab the audio, but I got an error back: ${e}`,
+            `I tried to grab the audio, but I got an error: ${e}`,
           );
         }
 
@@ -131,9 +128,7 @@ bot.on('message', async (message) => {
           }
         } else {
           serverQueue.songs.push(song);
-          return message.channel.send(
-            `**${song.songInfo.videoDetails.title}** has been added to the queue (currently ${serverQueue.songs.length - 1} in line)`
-          );
+          return message.channel.send(`**${song.songInfo.videoDetails.title}** has been added to the queue (currently ${serverQueue.songs.length - 1} in line)`);
         }
       }
     } else if (!args[0]) {
@@ -154,17 +149,17 @@ bot.on('message', async (message) => {
           }
         }
 
-        if (command === '!jukereset') {
+        if (command === '!jukesong') {
           try {
-            return jukeFunctions.reset(message, serverQueue);
+            return jukeFunctions.songInfo(serverQueue);
           } catch (err) {
             console.log(err);
           }
         }
 
-        if (command === '!jukesong') {
+        if (command === '!jukereset') {
           try {
-            return jukeFunctions.songInfo(serverQueue);
+            return jukeFunctions.reset(serverQueue);
           } catch (err) {
             console.log(err);
           }
@@ -178,7 +173,8 @@ bot.on('message', async (message) => {
           }
         }
       } else if (!serverQueue) {
-        if (command !== '!jukecommands' && command !== '!jukereset') {
+        console.log(command);
+        if (command !== '!jukecommands') {
           return message.channel.send(
             `I can't ${command} right now.  If it's a song-specific command, make sure a song is playing.`,
           );
