@@ -40,10 +40,12 @@ const stop = (message, serverQueue) => {
 };
 
 const commands = (message) => message.channel.send(
-  'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukesong: displays song info \n !jukequeue: displays the list of queued songs \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n If you find any errors or something doesn\'t work as expected, let Colin know',
+  'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukesong: displays song info \n !jukequeue: displays the list of queued songs \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n !jukereset will do a soft reset of the bot in case it starts misbehaving \n !jukebreak is a hard reset if the bot is *really* misbehaving \n If you find any errors or something doesn\'t work as expected, let Colin know',
 );
 
-const songInfo = (serverQueue) => serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`);
+const songInfo = (serverQueue) => {
+  serverQueue.textChannel.send(`**${serverQueue.songs[0].videoDetails.title}** is currently playing, and it's ${serverQueue.songs[0].videoDetails.lengthSeconds} seconds long`)
+};
 
 const queue = (serverQueue, message) => {
   const songTitleArray = serverQueue.songs.map((song, idx) => `${`${idx + 1}.` + ' '}${song.songInfo.videoDetails.title}`);
