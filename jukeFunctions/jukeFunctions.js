@@ -39,15 +39,6 @@ const stop = (message, serverQueue) => {
   serverQueue.connection.dispatcher.end();
 };
 
-const reset = (message, serverQueue) => {
-  if (!message.member.voice.channel) {
-    return message.channel.send(
-      'You gotta be in a voice channel to stop the song, bro',
-    );
-  }
-  serverQueue.connection.dispatcher.destroy();
-};
-
 const commands = (message) => message.channel.send(
   'Welcome to JukeBot, bitches. \n To add a song to the queue, type: !juke {Youtube URL} \n Other commands include: \n !jukeskip: skip to the next song in the queue \n !jukestop: delete the queue and disconnect JukeBot \n !jukesong: displays song info \n !jukequeue: displays the list of queued songs \n JukeBot\'s volume can be adjusted by right-clicking on JukeBot \n (The adjustment will only effect volume for you) \n If you find any errors or something doesn\'t work as expected, let Colin know',
 );
@@ -65,5 +56,5 @@ const queue = (serverQueue, message) => {
 };
 
 module.exports = {
-  play, skip, stop, commands, songInfo, queue, reset,
+  play, skip, stop, commands, songInfo, queue,
 };
